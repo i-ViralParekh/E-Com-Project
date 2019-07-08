@@ -32,7 +32,8 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-		format.html { redirect_to @line_item.cart }
+		format.html { redirect_to store_index_url }
+		# format.js   { @current_item = @line_item }
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new }
@@ -40,6 +41,53 @@ class LineItemsController < ApplicationController
       end
     end
   end
+
+
+
+
+  def update_quantity
+    if @line_item = LineItem.find_by_id(params[:id])
+      
+      if params[:update_action] == 'increase'
+   
+        @line_item.quantity += 1
+        @line_item.save
+      
+    elsif params[:update_action] == 'decrease'
+        
+      if @line_item.quantity > 1 
+        @line_item.quantity -= 1
+        @line_item.save
+      else 
+        @line_item.delete
+      end
+    
+    elsif params[:update_action] == 'remove'
+      
+      @line_item.delete
+      
+    end
+    
+  end
+
+    respond_to do |format|
+        format.html { redirect_to store_index_url }
+        # format.js { render :show, status: :created, location: @line_item }
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # PATCH/PUT /line_items/1
   # PATCH/PUT /line_items/1.json
