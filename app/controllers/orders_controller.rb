@@ -30,6 +30,7 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
+    puts order_params
     @order = Order.new(order_params)
     @order.add_line_items_from_cart(@cart)
 
@@ -37,6 +38,8 @@ class OrdersController < ApplicationController
       if @order.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
+        ChargeOrderJob.perform_later(@order,pay_type_params.to_h)        
+        #OrderMailer.received(@order).deliver_later
         format.html { redirect_to store_index_url, notice: 'Thank You For Your Order.' }
         format.json { render :show, status: :created, location: @order }
       else
@@ -97,15 +100,8 @@ class OrdersController < ApplicationController
         params.require(:order).permit(:routing_number, :account_number)
       elsif order_params[:pay_type] == "Purchase Order"
         params.require(:order).permit(:po_number)
-      else
-      {}
+      else 
+        {}
       end
     end
-
-
-
-
-
-
-
 end
