@@ -10,6 +10,7 @@ gem 'pg'
 gem 'haml'
 gem "erb2haml", :group => :development
 gem 'webpacker', '~> 3.0'
+gem 'i18n-js'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
