@@ -4,7 +4,7 @@
   - unless cart.line_items.empty?
     %h2= t('.title')
     %table
-      = render(cart.line_items)
+      = render(cart.line_items.sort)
       %tfoot
         %tr
           %th{:colspan => "2"} Total:
